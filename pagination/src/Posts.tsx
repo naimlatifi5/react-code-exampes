@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Pagination from "./Pagination";
+import { useCallback } from "react";
 
 const Posts = () => {
   const pageNumberLimit = 5;
@@ -10,25 +11,27 @@ const Posts = () => {
   const [loading, setLoading] = useState(true);
   const [maxPageLimit, setMaxPageLimit] = useState(4);
   const [minPageLimit, setMinPageLimit] = useState(0);
-
-  useEffect(() => {
+  const fetchPosts = useCallback(async () => {
     setLoading(true);
-    axios
-      .get(
-        `http://localhost:3001/posts?_page=${currentPage}&_limit=${pageNumberLimit}`
-      )
-      .then((response) => {
-        setTotalCount(response.headers["x-total-count"] as string);
-        setPosts(response.data);
-        setLoading(false);
-      });
+    const response = await axios.get(
+      `http://localhost:3001/posts?_page=${currentPage}&_limit=${pageNumberLimit}`
+    );
+    if (response) {
+      setTotalCount(response.headers["x-total-count"] as string);
+      setPosts(response.data);
+      setLoading(false);
+    }
   }, [currentPage]);
 
-  const onPageChange = (pageNumber: number) => {
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+
+  const onPageChange = (pageNumber: number): void => {
     setCurrentPage(pageNumber++);
   };
 
-  const onPrevClick = () => {
+  const onPrevClick = (): void => {
     if ((currentPage - 1) % pageNumberLimit === 0) {
       setMaxPageLimit(maxPageLimit - pageNumberLimit);
       setMinPageLimit(minPageLimit - pageNumberLimit);

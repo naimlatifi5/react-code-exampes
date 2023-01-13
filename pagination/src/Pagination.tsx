@@ -1,4 +1,5 @@
-import "./pagination.css";
+import styles from "./pagination.module.css";
+import classNames from "classnames";
 interface Props {
   currentPage: number;
   maxPageLimit: number;
@@ -43,15 +44,19 @@ const Pagination = (props: Props) => {
           key={page}
           id={`${page}`}
           onClick={handlePageClick}
-          className={`${currentPage === page ? "active" : null}`}
+          className={classNames(
+            `${currentPage === page ? styles.PageItemActive : null}`,
+            styles.PaginationListItem
+          )}
         >
           {page}
         </li>
       );
+    } else {
+      return null;
     }
   });
 
-  // page ellipses
   let pageIncrementEllipses = null;
   if (pages.length > maxPageLimit) {
     pageIncrementEllipses = <li onClick={handleNextClick}>&hellip;</li>;
@@ -62,27 +67,25 @@ const Pagination = (props: Props) => {
   }
 
   return (
-    <div className="main">
-      <ul className="pageNumbers">
-        <li>
-          <button onClick={handlePrevClick} disabled={currentPage === pages[0]}>
-            Prev
-          </button>
-        </li>
-        {pageDecremenEllipses}
-        {pageNumbers}
-        {pageIncrementEllipses}
-        <li>
-          <button
-            type="button"
-            onClick={handleNextClick}
-            disabled={currentPage === pages[pages.length - 1]}
-          >
-            Next
-          </button>
-        </li>
-      </ul>
-    </div>
+    <ul className={styles.PaginationWrapper}>
+      <li className={styles.PreviousButton}>
+        <button onClick={handlePrevClick} disabled={currentPage === pages[0]}>
+          Prev
+        </button>
+      </li>
+      {pageDecremenEllipses}
+      {pageNumbers}
+      {pageIncrementEllipses}
+      <li className={styles.NextButton}>
+        <button
+          type="button"
+          onClick={handleNextClick}
+          disabled={currentPage === pages[pages.length - 1]}
+        >
+          Next
+        </button>
+      </li>
+    </ul>
   );
 };
 
