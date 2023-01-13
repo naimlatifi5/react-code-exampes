@@ -3,14 +3,21 @@ import axios from "axios";
 import Pagination from "./Pagination";
 import { useCallback } from "react";
 
+interface Post {
+  id: number;
+  title: string;
+  author: string;
+}
+
 const Posts = () => {
-  const pageNumberLimit = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalCount, setTotalCount] = useState("");
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [maxPageLimit, setMaxPageLimit] = useState(4);
-  const [minPageLimit, setMinPageLimit] = useState(0);
+  const pageNumberLimit: number = 5;
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalCount, setTotalCount] = useState<string>("");
+  const [posts, setPosts] = useState<[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [maxPageLimit, setMaxPageLimit] = useState<number>(4);
+  const [minPageLimit, setMinPageLimit] = useState<number>(0);
+
   const fetchPosts = useCallback(async () => {
     setLoading(true);
     const response = await axios.get(
@@ -39,7 +46,7 @@ const Posts = () => {
     setCurrentPage((prev) => prev - 1);
   };
 
-  const onNextClick = () => {
+  const onNextClick = (): void => {
     if (currentPage + 1 > maxPageLimit) {
       setMaxPageLimit(maxPageLimit + pageNumberLimit);
       setMinPageLimit(minPageLimit + pageNumberLimit);
@@ -48,10 +55,10 @@ const Posts = () => {
   };
 
   return (
-    <div>
+    <>
       <h1>Posts List</h1>
       <ul>
-        {posts.map((post: any) => (
+        {posts.map((post: Post) => (
           <li key={post.id}>
             {post.title} - {post.author}
           </li>
@@ -72,7 +79,7 @@ const Posts = () => {
           <div> Loading posts... </div>
         )}
       </div>
-    </div>
+    </>
   );
 };
 

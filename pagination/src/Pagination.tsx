@@ -57,15 +57,6 @@ const Pagination = (props: Props) => {
     }
   });
 
-  let pageIncrementEllipses = null;
-  if (pages.length > maxPageLimit) {
-    pageIncrementEllipses = <li onClick={handleNextClick}>&hellip;</li>;
-  }
-  let pageDecremenEllipses = null;
-  if (minPageLimit >= 1) {
-    pageDecremenEllipses = <li onClick={handlePrevClick}>&hellip;</li>;
-  }
-
   return (
     <ul className={styles.PaginationWrapper}>
       <li className={styles.PreviousButton}>
@@ -73,9 +64,12 @@ const Pagination = (props: Props) => {
           Prev
         </button>
       </li>
-      {pageDecremenEllipses}
+      {minPageLimit >= 1 && <li onClick={handlePrevClick}>&hellip;</li>}
       {pageNumbers}
-      {pageIncrementEllipses}
+      {pages.length > maxPageLimit && (
+        <li onClick={handleNextClick}>&hellip;</li>
+      )}
+
       <li className={styles.NextButton}>
         <button
           type="button"
